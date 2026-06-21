@@ -66,10 +66,20 @@ def processCommand(c):
         webbrowser.open("https://linkedin.com")
     elif "open github" in c.lower():
         webbrowser.open("https://Github.com")
+    elif "open chatgpt" in c.lower():
+        webbrowser.open("https://chatgpt.com/")
     elif c.lower().startswith("play"):
-        song = c.lower().split(" ")[1]
-        link = musicLibrary.music[song]
-        webbrowser.open(link)
+        parts = c.lower().split(" ", 1)
+        if len(parts) < 2 or not parts[1].strip():
+            speak("Please say the song name after play")
+            return
+
+        song = parts[1].strip().replace(" ", "")
+        link = musicLibrary.music.get(song)
+        if link:
+            webbrowser.open(link)
+        else:
+            speak(f"I could not find {song} in the music library")
 
     elif "news" in c.lower():
         r = requests.get(f"https://newsapi.org/v2/top-headlines?country=in&apiKey={newsapi}")
